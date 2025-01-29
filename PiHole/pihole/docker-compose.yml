@@ -1,0 +1,35 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    #networks:
+    #  - traefik_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.local.sowt.ca`)"
+      - "traefik.http.routers.pihole.entrypoints=web"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+
+
+    environment:
+      ServerIP: '10.0.0.141'
+      TZ: 'America/Toronto'
+      WEBPASSWORD: 'admin123'
+      DNS1: '1.1.1.1'
+      DNS2: '1.0.0.1'
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - 8080:80
+    volumes:
+      - ./etc-pihole:/etc/pihole
+      - ./etc-dnsmasq:/etc/dnsmasq.d
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+networks:
+  traefik_net:
+    external: true

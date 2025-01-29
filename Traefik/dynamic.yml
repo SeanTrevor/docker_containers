@@ -1,0 +1,18 @@
+http:
+  routers:
+    forwarded-wireguard:
+      rule: "Host(`wireguard.local.sowt.ca`)"
+      service: wireguard-remote-service
+    forwarded-qbit:
+      rule: "Host(`qbits.local.sowt.ca`)"
+      service: qbit-remote-service
+
+  services:
+    wireguard-remote-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.172:51821"  # Replace with actual remote host and port
+    qbit-remote-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.172:8080"  # Replace with actual remote host and port
