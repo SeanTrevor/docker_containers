@@ -2,8 +2,8 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    #networks:
-    #  - traefik_net
+    networks:
+      - traefik_net
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.local.sowt.ca`)"
