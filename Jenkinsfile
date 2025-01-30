@@ -24,7 +24,7 @@ pipeline {
                 script {
                     // Run git diff to find the changed files on the remote server
                     def changedFiles = sh(script: """
-                        ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && git diff --name-only HEAD"
+                        ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && git diff --name-only HEAD~1"
                     """, returnStdout: true).trim().split('\n')
                     def rootDirs = changedFiles.collect { it.split('/')[0] }.unique()
                     env.ROOT_DIRS = rootDirs.join(' ')
@@ -37,8 +37,9 @@ pipeline {
                 script {
                     echo "changed files: ${env.ROOT_DIRS}"
                     env.ROOT_DIRS.split(' ').each { dir ->
+                        echo "Looking into: ${dir}"
                         if (fileExists("${dir}/docker-compose.yml")) {
-                            // Run docker-compose on the remote server for each changed directory
+                            // Run docker-compose on the remote server
                             sh """
                                 ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH}/${dir} && docker-compose up -d"
                             """
