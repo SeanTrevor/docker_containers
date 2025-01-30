@@ -35,6 +35,7 @@ pipeline {
         stage('Run Docker Compose') {
             steps {
                 script {
+                    echo "changed files: ${env.ROOT_DIRS}"
                     env.ROOT_DIRS.split(' ').each { dir ->
                         if (fileExists("${dir}/docker-compose.yml")) {
                             // Run docker-compose on the remote server
