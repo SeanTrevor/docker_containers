@@ -40,6 +40,7 @@ pipeline {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && \
                                 for dir in \$(echo '${env.CHANGED_DIRS}'); do \
+                                    echo 'changed dir is \$dir'; \
                                     if [ -f \"\$dir/docker-compose.yml\" ]; then \
                                         cd \"\$dir\" && docker-compose up -d; \
                                         cd ..; \
