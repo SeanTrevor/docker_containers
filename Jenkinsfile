@@ -26,11 +26,12 @@ pipeline {
                 script {
                     env.CHANGED_DIRS = sh(script: """
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && \
-                        git diff --name-only HEAD@{1} HEAD | awk -F'/' '{print \$1}' | sort -u"
+                        git diff --name-only HEAD@{1} HEAD | awk -F'/' '{print \$1\"/\"\$2}' | sort -u"
                     """, returnStdout: true).trim()
                 }
             }
         }
+
 
 
         stage('Deploy Changed Services') {
