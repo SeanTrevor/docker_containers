@@ -20,7 +20,7 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - 9080:8080
+      - 8080:8080
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq:/etc/dnsmasq.d
