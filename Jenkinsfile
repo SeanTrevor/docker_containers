@@ -1,62 +1,50 @@
 pipeline {
     agent any
-
+    
     environment {
-        REMOTE_USER = 'strevor'             // Remote server user
-        REMOTE_HOST = '10.0.0.141'       // Remote server address
-        REMOTE_PATH = '~/Projects/docker_containers'  // Path to project on remote server
-        SSH_CREDENTIALS_ID = 'jenkins-ssh-key' // Jenkins SSH credentials ID
+        REMOTE_HOST = '10.0.0.141'
+        REMOTE_USER = 'strevor'
+        REMOTE_PATH = '~/Projects/docker_containers'
     }
-
+    
     stages {
-        stage('Pull Latest Code') {
+        stage('Checkout') {
             steps {
                 script {
-                    sshagent(['jenkins-ssh-key']) {
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && git fetch origin main && git reset --hard origin/main"
-                        """
-                    }
+                    // SSH into the remote server and pull the latest code
+                    sh """
+                        ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && git pull"
+                    """
                 }
             }
         }
-
-        stage('Detect Changed Directories') {
+        
+        stage('Find Changed Files') {
             steps {
                 script {
-                    env.CHANGED_DIRS = sh(script: """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && \
-                        git diff --name-only HEAD@{1} HEAD | awk -F'/' '{print \$1\"/\"\$2}' | sort -u"
-                    """, returnStdout: true).trim()
+                    // Run git diff to find the changed files on the remote server
+                    def changedFiles = sh(script: """
+                        ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && git diff --name-only HEAD~1"
+                    """, returnStdout: true).trim().split('\n')
+                    def rootDirs = changedFiles.collect { it.split('/')[0] }.unique()
+                    env.ROOT_DIRS = rootDirs.join(' ')
                 }
             }
         }
-
-
-
-
-        stage('Deploy Changed Services') {
+        
+        stage('Run Docker Compose') {
             steps {
                 script {
-                    if (env.CHANGED_DIRS) {
-                        echo "Detected changes in the following directories: ${env.CHANGED_DIRS}"
-                        sshagent(['jenkins-ssh-key']) {
+                    env.ROOT_DIRS.split(' ').each { dir ->
+                        if (fileExists("${dir}/docker-compose.yml")) {
+                            // Run docker-compose on the remote server
                             sh """
-                                ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && \
-                                for dir in \$(echo '${env.CHANGED_DIRS}'); do \
-                                    if [ -f \"\$dir/docker-compose.yml\" ]; then \
-                                        cd \"\$dir\" && docker-compose up -d; \
-                                        cd ..; \
-                                    fi; \
-                                done"
+                                ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH}/${dir} && docker-compose up -d"
                             """
                         }
-                    } else {
-                        echo "No relevant changes detected. Skipping deployment."
                     }
                 }
             }
         }
-
     }
 }
