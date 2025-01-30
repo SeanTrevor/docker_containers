@@ -39,9 +39,10 @@ pipeline {
                         sshagent(['jenkins-ssh-key']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_PATH} && \
-                                for dir in ${env.CHANGED_DIRS}; do \
+                                for dir in \$(echo '${env.CHANGED_DIRS}'); do \
                                     if [ -f \"\$dir/docker-compose.yml\" ]; then \
                                         cd \"\$dir\" && docker-compose up -d; \
+                                        cd ..; \
                                     fi; \
                                 done"
                             """
@@ -52,5 +53,6 @@ pipeline {
                 }
             }
         }
+
     }
 }
