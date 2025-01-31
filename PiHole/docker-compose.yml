@@ -14,7 +14,7 @@ services:
     environment:
       ServerIP: '10.0.0.141'
       TZ: 'America/Toronto'
-      WEBPASSWORD: 'admin123'
+      WEBPASSWORD: 'admin1234'
       DNS1: '1.1.1.1'
       DNS2: '1.0.0.1'
     ports:
