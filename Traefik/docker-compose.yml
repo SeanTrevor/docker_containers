@@ -34,7 +34,7 @@ services:
 
   whoami:
     image: "traefik/whoami"
-    container_name: "simple-service"
+    container_name: "simple-service-test"
     networks:
       - traefik_net
     labels:
