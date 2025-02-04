@@ -29,7 +29,7 @@ services:
       - "./letsencrypt:/letsencrypt"
       - "./dynamic.yml:/etc/traefik/dynamic.yml"  # Mount dynamic configuration
     dns:
-      - 10.0.0.141 # Use local DNS server
+      - 10.0.0.93 # Use local DNS server
       - 8.8.8.8  # Use Cloudflare's DNS server (optional)
 
   whoami:
