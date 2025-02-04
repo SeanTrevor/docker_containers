@@ -1,7 +1,7 @@
 services:
   traefik:
     image: "traefik:latest"
-    container_name: "traefik"
+    container_name: "traefika"
     networks:
       - traefik_net
     labels:
@@ -39,7 +39,7 @@ services:
       - traefik_net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami2.sowt.ca`)"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.sowt.ca`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
 
