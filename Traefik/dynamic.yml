@@ -35,3 +35,4 @@ https:
       loadBalancer:
         servers:
           - url: "https://10.0.0.172:9443"  # Replace with actual remote host and port
+      scheme: "https"
