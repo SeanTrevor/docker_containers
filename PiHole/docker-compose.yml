@@ -12,7 +12,7 @@ services:
 
 
     environment:
-      ServerIP: '10.0.0.141'
+      ServerIP: '10.0.0.93'
       TZ: 'America/Toronto'
       WEBPASSWORD: 'admin123'
       DNS1: '1.1.1.1'
