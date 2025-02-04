@@ -2,6 +2,7 @@ pipeline {
     agent any
     
     environment {
+        TEST="test"
         REMOTE_HOST = '10.0.0.93'
         REMOTE_USER = 'seantrevor'
         REMOTE_PATH = '~/Projects/docker_containers'
