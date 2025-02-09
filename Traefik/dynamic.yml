@@ -3,41 +3,31 @@ http:
     forwarded-wireguard:
       rule: "Host(`wireguard.local.sowt.ca`)"
       service: wireguard-remote-service
-
     forwarded-qbit:
       rule: "Host(`qbits.local.sowt.ca`)"
       service: qbit-remote-service
-
     forwarded-jenkins:
       rule: "Host(`jenkins.local.sowt.ca`)"
       service: jenkins-remote-service
-
     forwarded-portainer:
       rule: "Host(`portainer.local.sowt.ca`)"
       service: portainer-remote-service
-      entryPoints:
-        - websecure
-      tls: {}  # Enable TLS termination at Traefik (preferred)
+      tls: true   # Optional if using HTTPS
 
   services:
     wireguard-remote-service:
       loadBalancer:
         servers:
           - url: "http://10.0.0.172:51821"
-
     qbit-remote-service:
       loadBalancer:
         servers:
           - url: "http://10.0.0.172:8081"
-
     jenkins-remote-service:
       loadBalancer:
         servers:
           - url: "http://10.0.0.172:8080"
-
     portainer-remote-service:
       loadBalancer:
         servers:
           - url: "https://10.0.0.172:9443"
-        passHostHeader: true
-        insecureSkipVerify: true  # Ignore SSL cert errors if using self-signed certs
