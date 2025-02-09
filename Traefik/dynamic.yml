@@ -12,23 +12,22 @@ http:
     forwarded-portainer:
       rule: "Host(`portainer.local.sowt.ca`)"
       service: portainer-remote-service
-    
+      tls: true   # Optional if using HTTPS
 
   services:
     wireguard-remote-service:
       loadBalancer:
         servers:
-          - url: "http://10.0.0.172:51821"  # Replace with actual remote host and port
+          - url: "http://10.0.0.172:51821"
     qbit-remote-service:
       loadBalancer:
         servers:
-          - url: "http://10.0.0.172:8081"  # Replace with actual remote host and port
+          - url: "http://10.0.0.172:8081"
     jenkins-remote-service:
       loadBalancer:
         servers:
-          - url: "http://10.0.0.172:8080"  # Replace with actual remote host and port
+          - url: "http://10.0.0.172:8080"
     portainer-remote-service:
       loadBalancer:
         servers:
-          - url: "https://10.0.0.172:9443"  # Replace with actual remote host and port
-      scheme: "https"
+          - url: "https://10.0.0.172:9443"
