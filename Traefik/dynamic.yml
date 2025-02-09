@@ -12,7 +12,10 @@ http:
     forwarded-portainer:
       rule: "Host(`portainer.local.sowt.ca`)"
       service: portainer-remote-service
-      tls: true   # Optional if using HTTPS
+      entryPoints:
+        - websecure
+      tls:
+        passthrough: true
 
   services:
     wireguard-remote-service:
@@ -31,3 +34,5 @@ http:
       loadBalancer:
         servers:
           - url: "https://10.0.0.172:9443"
+        passHostHeader: true
+        insecureSkipVerify: true  # Ignore SSL cert errors if using self-signed certs
