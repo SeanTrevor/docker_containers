@@ -11,4 +11,8 @@ jobs:
     steps:
       - name: Call Jenkins Webhook
         run: |
-          curl -X POST "${{ secrets.JENKINS_WEBHOOK }}"
+          curl -X POST \
+                -H "Content-Type: application/json" \
+                -H "X-GitHub-Event: push" \
+                --data '{}' \
+                "${{ secrets.JENKINS_WEBHOOK }}"
