@@ -1,0 +1,14 @@
+name: Trigger Jenkins Build
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your branch
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Jenkins Webhook
+        run: |
+          curl -X POST "${{ secrets.JENKINS_WEBHOOK }}"
