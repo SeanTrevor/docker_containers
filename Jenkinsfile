@@ -5,7 +5,7 @@ pipeline {
         stage('Pull Latest Code') {
             steps {
                 script {
-                    sh 'cd /volume2/docker && git pull origin main'
+                    sh 'pwd && cd /volume2/docker && git pull origin main'
                 }
             }
         }
