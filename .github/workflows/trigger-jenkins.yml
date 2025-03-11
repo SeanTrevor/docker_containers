@@ -14,5 +14,5 @@ jobs:
           curl -X POST \
                 -H "Content-Type: application/json" \
                 -H "X-GitHub-Event: push" \
-                --data '{"ref": "${{ github.ref }}", "repository": {"full_name": "${{ github.repository }}"}}' \
+                --data "$(jq -n --argjson event '${{ toJson(github.event) }}' '$event')" \
                 "${{ secrets.JENKINS_WEBHOOK }}"
