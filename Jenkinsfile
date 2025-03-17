@@ -1,22 +1,36 @@
 pipeline {
     agent any
-
+    
+    environment {
+        GIT_REPO = 'git@github.com:SeanTrevor/docker_containers.git'
+        BRANCH = 'main'  // Change this to your desired branch
+    }
+    
     stages {
-        stage('Pull Latest Code') {
+        stage('Load Environment Variables') {
             steps {
                 script {
-                    sh 'pwd && cd /volume2/docker && git pull origin main'
+                    def envVars = readProperties file: '.env'
+                    env.DEPLOY_USER = envVars['DEPLOY_USER']
+                    env.DEPLOY_HOST = envVars['DEPLOY_HOST']
+                    env.DEPLOY_DIR = envVars['DEPLOY_DIR']
                 }
             }
         }
-        stage('Build') {
+        
+        stage('Clone Repository') {
             steps {
-                echo 'Building...'
+                git branch: "$BRANCH", url: "$GIT_REPO"
             }
         }
-        stage('Deploy') {
+        
+        stage('Deploy to Remote Server') {
             steps {
-                echo 'Deploying...'
+                script {
+                    sshagent(['STCloud-SSH-Deploy']) {
+                        sh "ssh $DEPLOY_USER@$DEPLOY_HOST 'cd $DEPLOY_DIR && git pull origin $BRANCH'"
+                    }
+                }
             }
         }
     }
