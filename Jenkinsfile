@@ -4,19 +4,12 @@ pipeline {
     environment {
         GIT_REPO = 'git@github.com:SeanTrevor/docker_containers.git'
         BRANCH = 'main'  // Change this to your desired branch
+        DEPLOY_USER="Sean"
+        DEPLOY_HOST="10.0.0.172"
+        DEPLOY_DIR="/volume2/docker/docker_containers"
     }
     
     stages {
-        stage('Load Environment Variables') {
-            steps {
-                script {
-                    def envVars = readProperties file: '.env'
-                    env.DEPLOY_USER = envVars['DEPLOY_USER']
-                    env.DEPLOY_HOST = envVars['DEPLOY_HOST']
-                    env.DEPLOY_DIR = envVars['DEPLOY_DIR']
-                }
-            }
-        }
         
         stage('Clone Repository') {
             steps {
